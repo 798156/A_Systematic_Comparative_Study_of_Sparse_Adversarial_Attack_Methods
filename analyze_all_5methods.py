@@ -9,13 +9,11 @@ from pathlib import Path
 from scipy import stats
 import pandas as pd
 
-# 必须在导入matplotlib之前设置后端
 import matplotlib
-matplotlib.use('Agg')  # 使用无GUI的后端
+matplotlib.use('Agg') 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Set style (English only)
 plt.rcParams['font.family'] = 'Arial'
 plt.rcParams['axes.unicode_minus'] = False
 sns.set_style("whitegrid")
@@ -48,16 +46,16 @@ def load_all_results():
                 with open(filepath, 'r') as f:
                     data = json.load(f)
                     all_data[model][method] = data
-                print(f"✅ 加载: {filename}")
+                print(f"加载: {filename}")
             else:
-                print(f"❌ 未找到: {filename}")
+                print(f"未找到: {filename}")
     
     return all_data
 
 def create_summary_table(all_data):
     """Create summary table"""
     print("\n" + "="*80)
-    print("📊 Complete 5-Method Comparison Table")
+    print("Complete 5-Method Comparison Table")
     print("="*80)
     
     models = ['ResNet18', 'VGG16', 'MobileNetV2']
@@ -77,7 +75,7 @@ def create_summary_table(all_data):
     
     # Display by method (cross-model average)
     print(f"\n{'='*80}")
-    print("📊 Method Comparison (Cross-Model Average)")
+    print("Method Comparison (Cross-Model Average)")
     print(f"{'='*80}\n")
     
     summary_data = []
@@ -93,7 +91,7 @@ def create_summary_table(all_data):
             if method in all_data[model]:
                 d = all_data[model][method]
                 asr_list.append(d['asr'])
-                if d['avg_l0'] > 0:  # 只统计成功的
+                if d['avg_l0'] > 0:  
                     l0_list.append(d['avg_l0'])
                 if d['avg_l2'] > 0:
                     l2_list.append(d['avg_l2'])
@@ -129,7 +127,7 @@ def create_summary_table(all_data):
 def statistical_significance_test(all_data):
     """Statistical significance test"""
     print("\n" + "="*80)
-    print("📈 Statistical Significance Test (ASR Comparison)")
+    print("Statistical Significance Test (ASR Comparison)")
     print("="*80)
     
     models = ['ResNet18', 'VGG16', 'MobileNetV2']
@@ -193,7 +191,6 @@ def plot_asr_comparison(all_data, output_dir):
                 row.append(0)
         data_matrix.append(row)
     
-    # 绘图
     fig, ax = plt.subplots(figsize=(10, 6))
     
     x = np.arange(len(models))
@@ -221,7 +218,7 @@ def plot_asr_comparison(all_data, output_dir):
     plt.tight_layout()
     plt.savefig(output_dir / 'asr_comparison_5methods.png', dpi=300, bbox_inches='tight')
     plt.savefig(output_dir / 'asr_comparison_5methods.pdf', bbox_inches='tight')
-    print(f"✅ 保存: asr_comparison_5methods.png/pdf")
+    print(f"保存: asr_comparison_5methods.png/pdf")
     plt.close()
 
 def plot_l0_comparison(all_data, output_dir):
@@ -266,7 +263,7 @@ def plot_l0_comparison(all_data, output_dir):
     plt.tight_layout()
     plt.savefig(output_dir / 'l0_comparison_5methods.png', dpi=300, bbox_inches='tight')
     plt.savefig(output_dir / 'l0_comparison_5methods.pdf', bbox_inches='tight')
-    print(f"✅ 保存: l0_comparison_5methods.png/pdf")
+    print(f"保存: l0_comparison_5methods.png/pdf")
     plt.close()
 
 def plot_efficiency_scatter(summary_data, output_dir):
@@ -298,7 +295,7 @@ def plot_efficiency_scatter(summary_data, output_dir):
     plt.tight_layout()
     plt.savefig(output_dir / 'efficiency_scatter_5methods.png', dpi=300, bbox_inches='tight')
     plt.savefig(output_dir / 'efficiency_scatter_5methods.pdf', bbox_inches='tight')
-    print(f"✅ 保存: efficiency_scatter_5methods.png/pdf")
+    print(f"保存: efficiency_scatter_5methods.png/pdf")
     plt.close()
 
 def plot_heatmap(all_data, output_dir):
@@ -338,7 +335,7 @@ def plot_heatmap(all_data, output_dir):
     plt.tight_layout()
     plt.savefig(output_dir / 'asr_heatmap_5methods.png', dpi=300, bbox_inches='tight')
     plt.savefig(output_dir / 'asr_heatmap_5methods.pdf', bbox_inches='tight')
-    print(f"✅ 保存: asr_heatmap_5methods.png/pdf")
+    print(f"保存: asr_heatmap_5methods.png/pdf")
     plt.close()
 
 def generate_latex_table(all_data, output_dir):
@@ -383,7 +380,7 @@ def generate_latex_table(all_data, output_dir):
     with open(output_dir / 'latex_table_5methods.tex', 'w') as f:
         f.write(latex_code)
     
-    print(f"✅ 保存: latex_table_5methods.tex")
+    print(f"保存: latex_table_5methods.tex")
 
 def write_analysis_report(summary_data, output_dir):
     """Generate analysis report"""
@@ -448,22 +445,20 @@ def write_analysis_report(summary_data, output_dir):
 
 All intelligent methods show statistically significant differences from RandomSparse (p < 0.05)
 
----
-Generated: 2025-11-05
 """
     
     with open(output_dir / 'analysis_report_5methods.md', 'w', encoding='utf-8') as f:
         f.write(report)
     
-    print(f"✅ 保存: analysis_report_5methods.md")
+    print(f" 保存: analysis_report_5methods.md")
 
 def main():
     print("\n" + "="*80)
-    print("🔬 Complete Analysis of 5 Sparse Attack Methods")
+    print(" Complete Analysis of 5 Sparse Attack Methods")
     print("="*80)
     
     # Load data
-    print("\n📂 Loading experiment results...")
+    print("\n Loading experiment results...")
     all_data = load_all_results()
     
     # Create output directory
@@ -477,32 +472,32 @@ def main():
     statistical_significance_test(all_data)
     
     # Generate visualizations
-    print("\n📊 Generating visualization charts...")
+    print("\n Generating visualization charts...")
     plot_asr_comparison(all_data, output_dir)
     plot_l0_comparison(all_data, output_dir)
     plot_efficiency_scatter(summary_data, output_dir)
     plot_heatmap(all_data, output_dir)
     
     # Generate LaTeX table
-    print("\n📝 Generating LaTeX table...")
+    print("\n Generating LaTeX table...")
     generate_latex_table(all_data, output_dir)
     
     # Generate analysis report
-    print("\n📄 Generating analysis report...")
+    print("\n Generating analysis report...")
     write_analysis_report(summary_data, output_dir)
     
     print(f"\n{'='*80}")
-    print("🎉 Analysis Complete!")
+    print(" Analysis Complete!")
     print(f"{'='*80}")
-    print(f"\n📁 All results saved in: {output_dir}")
+    print(f"\n All results saved in: {output_dir}")
     print("\nGenerated files:")
-    print("  ✅ asr_comparison_5methods.png/pdf - ASR comparison bar chart")
-    print("  ✅ l0_comparison_5methods.png/pdf - L0 comparison bar chart")
-    print("  ✅ efficiency_scatter_5methods.png/pdf - Efficiency scatter plot")
-    print("  ✅ asr_heatmap_5methods.png/pdf - ASR heatmap")
-    print("  ✅ latex_table_5methods.tex - LaTeX table")
-    print("  ✅ analysis_report_5methods.md - Complete analysis report")
-    print("\n💡 These materials can be directly used in your paper!\n")
+    print("   asr_comparison_5methods.png/pdf - ASR comparison bar chart")
+    print("   l0_comparison_5methods.png/pdf - L0 comparison bar chart")
+    print("  efficiency_scatter_5methods.png/pdf - Efficiency scatter plot")
+    print("  asr_heatmap_5methods.png/pdf - ASR heatmap")
+    print("  latex_table_5methods.tex - LaTeX table")
+    print("  analysis_report_5methods.md - Complete analysis report")
+    print("\n These materials can be directly used in your paper!\n")
 
 if __name__ == "__main__":
     main()
