@@ -28,7 +28,7 @@ class AblationExperiment:
         
         # 设置设备
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        print(f"🚀 使用设备: {self.device}")
+        print(f"使用设备: {self.device}")
         
         # 加载数据和模型
         self._setup_data_and_model()
@@ -59,7 +59,7 @@ class AblationExperiment:
         测试不同奖励权重的影响
         """
         print("\n" + "=" * 60)
-        print("🧪 消融实验1: 奖励函数配置")
+        print("消融实验1: 奖励函数配置")
         print("=" * 60)
         
         # 不同的奖励配置
@@ -103,7 +103,7 @@ class AblationExperiment:
         测试允许不同修改像素数的影响
         """
         print("\n" + "=" * 60)
-        print("🧪 消融实验2: 最大修改步数")
+        print("消融实验2: 最大修改步数")
         print("=" * 60)
         
         max_steps_list = [1, 3, 5, 7, 10]
@@ -134,7 +134,7 @@ class AblationExperiment:
         测试不同训练时长的影响
         """
         print("\n" + "=" * 60)
-        print("🧪 消融实验3: 训练步数")
+        print("消融实验3: 训练步数")
         print("=" * 60)
         
         training_steps_list = [1000, 3000, 5000, 10000, 20000]
@@ -164,9 +164,6 @@ class AblationExperiment:
         successes = 0
         total_pixels = []
         
-        # 为了简化，这里使用已训练的模型
-        # 在真实实验中，应该为每个配置重新训练
-        
         for i in tqdm(range(num_samples), desc="测试样本"):
             image, label = self.test_set[i]
             
@@ -177,17 +174,13 @@ class AblationExperiment:
                 model=self.model,
                 max_steps=5
             )
-            
-            # 加载或训练智能体
-            # 这里简化为使用默认模型
             agent_path = "ppo_sparse_model.zip"
             if os.path.exists(agent_path):
                 from stable_baselines3 import PPO
                 agent = PPO.load(agent_path)
             else:
                 agent = train_rl_agent(env, timesteps=5000)
-            
-            # 测试攻击
+    
             vec_env = DummyVecEnv([lambda: env])
             obs = vec_env.reset()
             done = False
@@ -217,17 +210,12 @@ class AblationExperiment:
         return asr, avg_pixels
     
     def _test_max_steps(self, num_samples, max_steps):
-        """测试不同的最大步数"""
-        # 简化实现
         return self._test_configuration(num_samples)
     
     def _test_training_steps(self, num_samples, training_steps):
-        """测试不同的训练步数"""
-        # 简化实现
         return self._test_configuration(num_samples)
     
     def _plot_reward_ablation(self, results):
-        """绘制奖励函数消融结果"""
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
         
         names = [r['name'] for r in results]
@@ -256,7 +244,7 @@ class AblationExperiment:
         plt.savefig(f"{save_dir}/reward_ablation.pdf", bbox_inches='tight')
         plt.close()
         
-        print(f"✅ 奖励函数消融图表已保存至: {save_dir}/reward_ablation.png")
+        print(f"奖励函数消融图表已保存至: {save_dir}/reward_ablation.png")
     
     def _plot_max_steps_ablation(self, results):
         """绘制最大步数消融结果"""
@@ -288,7 +276,7 @@ class AblationExperiment:
         plt.savefig(f"{save_dir}/max_steps_ablation.pdf", bbox_inches='tight')
         plt.close()
         
-        print(f"✅ 最大步数消融图表已保存至: {save_dir}/max_steps_ablation.png")
+        print(f"最大步数消融图表已保存至: {save_dir}/max_steps_ablation.png")
     
     def _plot_training_steps_ablation(self, results):
         """绘制训练步数消融结果"""
@@ -312,7 +300,7 @@ class AblationExperiment:
         plt.savefig(f"{save_dir}/training_steps_ablation.pdf", bbox_inches='tight')
         plt.close()
         
-        print(f"✅ 训练步数消融图表已保存至: {save_dir}/training_steps_ablation.png")
+        print(f"训练步数消融图表已保存至: {save_dir}/training_steps_ablation.png")
     
     def save_results(self, filename="results/ablation/ablation_results.json"):
         """保存所有消融实验结果"""
@@ -321,12 +309,12 @@ class AblationExperiment:
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(self.results, f, indent=2, ensure_ascii=False)
         
-        print(f"\n✅ 消融实验结果已保存至: {filename}")
+        print(f"\n消融实验结果已保存至: {filename}")
     
     def generate_latex_table(self):
         """生成LaTeX格式的表格"""
         print("\n" + "=" * 60)
-        print("📝 LaTeX表格代码")
+        print("LaTeX表格代码")
         print("=" * 60)
         
         if 'reward_ablation' in self.results:
@@ -349,20 +337,15 @@ class AblationExperiment:
 
 def main():
     """运行所有消融实验"""
-    print("🧪 开始消融实验")
+    print("开始消融实验")
     print("=" * 60)
     
     # 创建实验管理器
     exp = AblationExperiment()
     
-    # 运行各项消融实验
-    # 注意：为了快速测试，这里使用较小的样本数
-    # 实际论文实验应该使用至少100个样本
+    num_samples = 20
     
-    num_samples = 20  # 快速测试用，实际应该用100+
-    
-    print(f"\n⚠️  当前使用 {num_samples} 个样本进行快速测试")
-    print("    实际论文实验建议使用至少 100 个样本\n")
+    print(f"\n当前使用 {num_samples} 个样本进行快速测试")
     
     # 1. 奖励函数消融
     # exp.run_reward_ablation(num_samples=num_samples)
@@ -370,20 +353,12 @@ def main():
     # 2. 最大步数消融
     exp.run_max_steps_ablation(num_samples=num_samples)
     
-    # 3. 训练步数消融（注意：这个会很耗时）
+    # 3. 训练步数消融
     # exp.run_training_steps_ablation(num_samples=num_samples)
-    
-    # 保存结果
     exp.save_results()
-    
-    # 生成LaTeX表格
     exp.generate_latex_table()
     
-    print("\n🎉 消融实验完成！")
-
-
+    print("\n消融实验完成！")
+    
 if __name__ == "__main__":
     main()
-
-
-
