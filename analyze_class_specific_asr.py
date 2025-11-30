@@ -120,7 +120,7 @@ class ClassSpecificAnalyzer:
     def load_all_data(self):
         """加载所有实验数据"""
         print("\n" + "="*60)
-        print("📂 加载实验数据...")
+        print("加载实验数据...")
         print("="*60)
         
         for model in self.models:
@@ -133,9 +133,9 @@ class ClassSpecificAnalyzer:
                         self.all_data[model][method] = data
                         print(f"✓ 加载: {model}_{method}")
                 else:
-                    print(f"⚠️  文件不存在: {json_file}")
+                    print(f" 文件不存在: {json_file}")
         
-        print(f"\n✅ 加载完成")
+        print(f"\n 加载完成")
     
     def extract_class_labels(self, data):
         """从数据中提取类别标签"""
@@ -147,7 +147,7 @@ class ClassSpecificAnalyzer:
     def analyze_class_asr(self):
         """分析每个类别的ASR"""
         print("\n" + "="*60)
-        print("📊 分析类别级别ASR...")
+        print(" 分析类别级别ASR...")
         print("="*60)
         
         # 使用ResNet18作为主要分析对象
@@ -155,7 +155,7 @@ class ClassSpecificAnalyzer:
         
         for method in self.methods:
             if method not in self.all_data[model]:
-                print(f"  ⚠️  跳过 {method}: 数据不存在")
+                print(f"   跳过 {method}: 数据不存在")
                 continue
             
             data = self.all_data[model][method]
@@ -164,14 +164,14 @@ class ClassSpecificAnalyzer:
             labels = self.extract_class_labels(data)
             
             if 'detailed_results' not in data:
-                print(f"  ⚠️  跳过 {method}: 没有detailed_results")
+                print(f" 过 {method}: 没有detailed_results")
                 continue
             
             results = data['detailed_results']
             
             # 确保长度匹配
             if len(labels) != len(results):
-                print(f"  ⚠️  警告: 标签数({len(labels)}) ≠ 结果数({len(results)})")
+                print(f" 警告: 标签数({len(labels)}) ≠ 结果数({len(results)})")
                 min_len = min(len(labels), len(results))
                 labels = labels[:min_len]
                 results = results[:min_len]
@@ -201,17 +201,17 @@ class ClassSpecificAnalyzer:
     def analyze_confusion_patterns(self):
         """分析混淆模式（攻击后被误分类为哪个类别）"""
         print("\n" + "="*60)
-        print("🔄 分析混淆模式...")
+        print(" 分析混淆模式...")
         print("="*60)
-        print("  ⚠️  跳过：JSON文件中没有adversarial_label信息")
-        print("  💡 如需混淆矩阵分析，需要修改实验脚本保存对抗标签")
+        print("  跳过：JSON文件中没有adversarial_label信息")
+        print("  如需混淆矩阵分析，需要修改实验脚本保存对抗标签")
         # 跳过混淆矩阵分析（数据中没有对抗标签）
         pass
     
     def generate_visualizations(self):
         """生成可视化"""
         print("\n" + "="*60)
-        print("📈 生成可视化...")
+        print("生成可视化...")
         print("="*60)
         
         # 1. 类别ASR热图
@@ -352,7 +352,7 @@ class ClassSpecificAnalyzer:
     def generate_report(self):
         """生成分析报告"""
         print("\n" + "="*60)
-        print("📝 生成分析报告...")
+        print("生成分析报告...")
         print("="*60)
         
         model = 'resnet18'
@@ -394,11 +394,11 @@ class ClassSpecificAnalyzer:
         
         for rank, (class_id, asr) in enumerate(sorted_classes, 1):
             if rank <= 3:
-                level = "困难 🔴"
+                level = "困难 "
             elif rank <= 7:
-                level = "中等 🟡"
+                level = "中等 "
             else:
-                level = "容易 🟢"
+                level = "容易 "
             
             report += f"| {rank} | {self.class_names[class_id]} ({self.class_names_cn[class_id]}) | {asr:.1f}% | {level} |\n"
         
@@ -483,10 +483,10 @@ class ClassSpecificAnalyzer:
         report += "3. **语义边界强化:** 加强语义相似类别间的决策边界\n\n"
         
         report += "### 4.3 论文价值\n\n"
-        report += "- ✅ 首次系统分析L0攻击的类别特定模式\n"
-        report += "- ✅ 揭示类别难度与攻击方法的交互效应\n"
-        report += "- ✅ 为类别自适应攻击/防御提供基础\n"
-        report += "- ✅ 增加论文的细粒度分析深度\n\n"
+        report += "-  首次系统分析L0攻击的类别特定模式\n"
+        report += "-  揭示类别难度与攻击方法的交互效应\n"
+        report += "-  为类别自适应攻击/防御提供基础\n"
+        report += "-  增加论文的细粒度分析深度\n\n"
         
         report += "---\n\n## 5. 可视化索引\n\n"
         report += "1. **class_asr_heatmap.pdf** - 类别ASR热图\n"
@@ -507,9 +507,8 @@ class ClassSpecificAnalyzer:
     
     def run_complete_analysis(self):
         """运行完整分析"""
-        print("\n" + "🚀"*30)
+        print("\n" )
         print("类别级别分析")
-        print("🚀"*30)
         
         # 0. 重建样本标签
         self.reconstruct_sample_labels()
@@ -530,18 +529,16 @@ class ClassSpecificAnalyzer:
         report = self.generate_report()
         
         # 最终总结
-        print("\n" + "🎉"*30)
         print("类别分析完成！")
-        print("🎉"*30)
         
-        print(f"\n📁 生成的文件:")
+        print(f"\n 生成的文件:")
         print(f"  1. {self.output_dir / 'class_analysis_report.md'}")
         print(f"  2. {self.output_dir / 'class_asr_heatmap.pdf'}")
         print(f"  3. {self.output_dir / 'class_difficulty_ranking.pdf'}")
         print(f"  4. {self.output_dir / 'class_comparison.pdf'}")
         print(f"  总计：6个文件（PDF + PNG）")
         
-        print(f"\n📂 保存位置：{self.output_dir}")
+        print(f"\n 保存位置：{self.output_dir}")
 
 def main():
     analyzer = ClassSpecificAnalyzer()
